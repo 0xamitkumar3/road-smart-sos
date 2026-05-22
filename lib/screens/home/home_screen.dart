@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../sos/sos_alert_screen.dart';
 import '../profile/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -96,7 +96,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                onPressed: () {},
+                 onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SOSAlertScreen(),
+                      ),
+                    );
+                  },
 
                 icon: const Icon(Icons.warning),
 
