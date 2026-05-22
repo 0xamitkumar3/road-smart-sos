@@ -1,7 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
-class EmergencyScreen extends StatelessWidget {
+import '../../services/gps_service/gps_service.dart';
+
+class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({super.key});
+
+  @override
+  State<EmergencyScreen> createState() =>
+      _EmergencyScreenState();
+}
+
+class _EmergencyScreenState
+    extends State<EmergencyScreen> {
+
+  final GPSService gpsService =
+      GPSService();
+
+  Position? position;
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadLocation();
+  }
+
+  Future<void> loadLocation() async {
+
+    Position? currentPosition =
+        await gpsService.getCurrentLocation();
+
+    setState(() {
+      position = currentPosition;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +47,8 @@ class EmergencyScreen extends StatelessWidget {
           padding: const EdgeInsets.all(24),
 
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment:
+                MainAxisAlignment.center,
             children: [
 
               Icon(
@@ -53,39 +87,84 @@ class EmergencyScreen extends StatelessWidget {
 
                 decoration: BoxDecoration(
                   color: const Color(0xFF1C1F2E),
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius:
+                      BorderRadius.circular(24),
                 ),
 
-                child: const Column(
+                child: Column(
                   children: [
 
-                    Row(
+                    const Row(
                       children: [
-                        Icon(Icons.location_on, color: Colors.red),
+
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                        ),
+
                         SizedBox(width: 10),
-                        Text("GPS Tracking Active"),
+
+                        Text(
+                          "GPS Tracking Active",
+                        ),
                       ],
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     Row(
                       children: [
-                        Icon(Icons.local_hospital,
-                            color: Colors.red),
-                        SizedBox(width: 10),
-                        Text("Nearest Hospital Alert Sent"),
+
+                        const Icon(
+                          Icons.my_location,
+                          color: Colors.green,
+                        ),
+
+                        const SizedBox(width: 10),
+
+                        Expanded(
+                          child: Text(
+                            position == null
+                                ? "Fetching location..."
+                                : "Lat: ${position!.latitude}\nLng: ${position!.longitude}",
+                          ),
+                        ),
                       ],
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                    Row(
+                    const Row(
                       children: [
-                        Icon(Icons.local_police,
-                            color: Colors.red),
+
+                        Icon(
+                          Icons.local_hospital,
+                          color: Colors.red,
+                        ),
+
                         SizedBox(width: 10),
-                        Text("Police Station Notified"),
+
+                        Text(
+                          "Nearest Hospital Alert Sent",
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Row(
+                      children: [
+
+                        Icon(
+                          Icons.local_police,
+                          color: Colors.red,
+                        ),
+
+                        SizedBox(width: 10),
+
+                        Text(
+                          "Police Station Notified",
+                        ),
                       ],
                     ),
                   ],
