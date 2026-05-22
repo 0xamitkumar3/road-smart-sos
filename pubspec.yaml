@@ -39,6 +39,7 @@ dependencies:
   flutter_tts: ^4.2.5
   audioplayers: ^6.6.0
   percent_indicator: ^4.2.5
+  sensors_plus: ^7.0.0
 
 dev_dependencies:
   flutter_test:

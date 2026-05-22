@@ -1,9 +1,55 @@
 import 'package:flutter/material.dart';
-import '../sos/sos_alert_screen.dart';
-import '../profile/profile_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../services/sensor_service/sensor_service.dart';
+import '../profile/profile_screen.dart';
+import '../sos/sos_alert_screen.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  final SensorService sensorService =
+      SensorService();
+
+  bool accidentDetected = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    sensorService.startMonitoring();
+
+    sensorService.accidentStream.listen((detected) {
+
+      if (detected && !accidentDetected) {
+
+        accidentDetected = true;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const SOSAlertScreen(),
+          ),
+        ).then((_) {
+
+          accidentDetected = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+
+    sensorService.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +127,39 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 20),
+
+            Container(
+              padding: const EdgeInsets.all(18),
+
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.green,
+                ),
+              ),
+
+              child: const Row(
+                children: [
+
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                  ),
+
+                  SizedBox(width: 12),
+
+                  Text(
+                    "Live Sensor Monitoring Active",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             const Spacer(),
 
             SizedBox(
@@ -96,14 +175,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                 onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const SOSAlertScreen(),
-                      ),
-                    );
-                  },
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const SOSAlertScreen(),
+                    ),
+                  );
+                },
 
                 icon: const Icon(Icons.warning),
 
