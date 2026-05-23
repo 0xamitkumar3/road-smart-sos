@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../maps/live_tracking_screen.dart';
 import '../../services/gps_service/gps_service.dart';
 
 class EmergencyScreen extends StatefulWidget {
@@ -166,6 +167,66 @@ class _EmergencyScreenState
                           "Police Station Notified",
                         ),
                       ],
+                    ),
+
+                    const SizedBox(height: 25),
+
+                    SizedBox(
+                      width: double.infinity,
+
+                      child: ElevatedButton.icon(
+                        style:
+                            ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Colors.red.shade400,
+
+                          padding:
+                              const EdgeInsets.symmetric(
+                            vertical: 14,
+                          ),
+
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(
+                              16,
+                            ),
+                          ),
+                        ),
+
+                        onPressed: () {
+
+                          if (position != null) {
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    LiveTrackingScreen(
+                                  latitude:
+                                      position!.latitude,
+
+                                  longitude:
+                                      position!.longitude,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+
+                        icon: const Icon(
+                          Icons.map,
+                        ),
+
+                        label: const Text(
+                          "Open Live Tracking",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
