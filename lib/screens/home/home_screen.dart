@@ -1,7 +1,8 @@
 import 'dart:async';
-
+import '../voice_assistant/voice_assistant_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../models/incident_model.dart';
 
@@ -207,7 +208,7 @@ class _HomeScreenState
 
     return Scaffold(
       backgroundColor:
-          const Color(0xFF0F111A),
+          const Color(0xFF090B12),
 
       appBar: AppBar(
         backgroundColor:
@@ -243,6 +244,8 @@ class _HomeScreenState
 
                 const Icon(
                   Icons.notifications,
+                  color: Colors.white,
+                  size: 28,
                 ),
 
                 Positioned(
@@ -278,6 +281,8 @@ class _HomeScreenState
 
             icon: const Icon(
               Icons.settings,
+              color: Colors.white,
+              size: 28,
             ),
           ),
 
@@ -294,7 +299,11 @@ class _HomeScreenState
             },
 
             icon:
-                const Icon(Icons.person),
+                const Icon(
+              Icons.person,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
         ],
       ),
@@ -312,14 +321,30 @@ class _HomeScreenState
 
               const SizedBox(height: 10),
 
-              const Text(
-                "Road Safety\nMonitoring System",
+              ShaderMask(
 
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight:
-                      FontWeight.bold,
-                  height: 1.2,
+                shaderCallback: (bounds) {
+
+                  return LinearGradient(
+                    colors: [
+
+                      Colors.white,
+
+                      Colors.red.shade300,
+                    ],
+                  ).createShader(bounds);
+                },
+
+                child: const Text(
+                  "Road Safety\nMonitoring System",
+
+                  style: TextStyle(
+                    fontSize: 34,
+                    fontWeight:
+                        FontWeight.bold,
+                    height: 1.2,
+                    color: Colors.white,
+                  ),
                 ),
               ),
 
@@ -339,16 +364,53 @@ class _HomeScreenState
                   decoration: BoxDecoration(
 
                     gradient: LinearGradient(
+                      begin:
+                          Alignment.topLeft,
+
+                      end:
+                          Alignment
+                              .bottomRight,
+
                       colors: [
+
                         Colors.red.shade400,
-                        Colors.red.shade700,
+
+                        const Color(
+                          0xFF8A0303,
+                        ),
                       ],
                     ),
 
                     borderRadius:
                         BorderRadius.circular(
-                      28,
+                      30,
                     ),
+
+                    border: Border.all(
+                      color: Colors.red
+                          .withValues(
+                        alpha: 0.25,
+                      ),
+                    ),
+
+                    boxShadow: [
+
+                      BoxShadow(
+                        color: Colors.red
+                            .withValues(
+                          alpha: 0.45,
+                        ),
+
+                        blurRadius: 30,
+                        spreadRadius: 4,
+
+                        offset:
+                            const Offset(
+                          0,
+                          12,
+                        ),
+                      ),
+                    ],
                   ),
 
                   child: const Column(
@@ -399,9 +461,7 @@ class _HomeScreenState
 
                               SizedBox(height: 10),
 
-                              Text(
-                                "Sensors",
-                              ),
+                              Text("Sensors"),
 
                               SizedBox(height: 4),
 
@@ -426,9 +486,7 @@ class _HomeScreenState
 
                               SizedBox(height: 10),
 
-                              Text(
-                                "GPS",
-                              ),
+                              Text("GPS"),
 
                               SizedBox(height: 4),
 
@@ -453,9 +511,7 @@ class _HomeScreenState
 
                               SizedBox(height: 10),
 
-                              Text(
-                                "Emergency",
-                              ),
+                              Text("Emergency"),
 
                               SizedBox(height: 4),
 
@@ -474,44 +530,61 @@ class _HomeScreenState
                     ],
                   ),
                 ),
-              ),
+              )
+                  .animate()
+                  .fadeIn(
+                    duration: 700.ms,
+                  )
+                  .slideY(
+                    begin: 0.3,
+                    end: 0,
+                  ),
 
               const SizedBox(height: 25),
 
-              Container(
-                padding:
-                    const EdgeInsets.all(
-                  20,
-                ),
-
-                decoration: BoxDecoration(
-                  color:
-                      const Color(0xFF1C1F2E),
-
-                  borderRadius:
-                      BorderRadius.circular(
-                    24,
-                  ),
-                ),
-
-                child: const Row(
+              buildGlassCard(
+                child: Row(
                   children: [
 
-                    Icon(
+                    const Icon(
                       Icons.sensors,
                       color: Colors.red,
                       size: 40,
                     ),
 
-                    SizedBox(width: 15),
+                    const SizedBox(width: 15),
 
                     Expanded(
-                      child: Text(
-                        "Sensors actively monitoring vehicle status.",
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
 
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
+                        children: [
+
+                          const Text(
+                            "Live Sensor Monitoring",
+
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Text(
+                            "Accelerometer: "
+                            "${sensorService.accelerometerX.toStringAsFixed(1)}, "
+                            "${sensorService.accelerometerY.toStringAsFixed(1)}, "
+                            "${sensorService.accelerometerZ.toStringAsFixed(1)}",
+
+                            style: const TextStyle(
+                              color:
+                                  Colors.white70,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -520,43 +593,48 @@ class _HomeScreenState
 
               const SizedBox(height: 20),
 
-              Container(
-                padding:
-                    const EdgeInsets.all(
-                  18,
-                ),
-
-                decoration: BoxDecoration(
-                  color:
-                      Colors.green.withValues(
-                    alpha: 0.15,
-                  ),
-
-                  borderRadius:
-                      BorderRadius.circular(
-                    20,
-                  ),
-
-                  border: Border.all(
-                    color: Colors.green,
-                  ),
-                ),
-
-                child: const Row(
+              buildGlassCard(
+                child: Row(
                   children: [
 
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
+                    const Icon(
+                      Icons.rotate_right,
+                      color: Colors.orange,
+                      size: 40,
                     ),
 
-                    SizedBox(width: 12),
+                    const SizedBox(width: 15),
 
-                    Text(
-                      "Live Sensor Monitoring Active",
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
 
-                      style: TextStyle(
-                        fontSize: 16,
+                        children: [
+
+                          const Text(
+                            "Gyroscope Activity",
+
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Text(
+                            "X: ${sensorService.gyroscopeX.toStringAsFixed(1)} | "
+                            "Y: ${sensorService.gyroscopeY.toStringAsFixed(1)} | "
+                            "Z: ${sensorService.gyroscopeZ.toStringAsFixed(1)}",
+
+                            style: const TextStyle(
+                              color:
+                                  Colors.white70,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -565,450 +643,11 @@ class _HomeScreenState
 
               const SizedBox(height: 30),
 
-              Container(
-                width: double.infinity,
-
-                padding:
-                    const EdgeInsets.all(
-                  22,
-                ),
-
-                decoration: BoxDecoration(
-                  color:
-                      const Color(0xFF1C1F2E),
-
-                  borderRadius:
-                      BorderRadius.circular(
-                    24,
-                  ),
-                ),
-
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-
-                  children: [
-
-                    const Row(
-                      children: [
-
-                        Icon(
-                          Icons.sensors,
-                          color: Colors.red,
-                        ),
-
-                        SizedBox(width: 12),
-
-                        Text(
-                          "Live Sensor Activity",
-
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight:
-                                FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    buildSensorTile(
-                      title:
-                          "Accelerometer X",
-
-                      value:
-                          sensorService
-                              .accelerometerX
-                              .toStringAsFixed(
-                                2,
-                              ),
-
-                      color:
-                          Colors.red,
-                    ),
-
-                    buildSensorTile(
-                      title:
-                          "Accelerometer Y",
-
-                      value:
-                          sensorService
-                              .accelerometerY
-                              .toStringAsFixed(
-                                2,
-                              ),
-
-                      color:
-                          Colors.orange,
-                    ),
-
-                    buildSensorTile(
-                      title:
-                          "Accelerometer Z",
-
-                      value:
-                          sensorService
-                              .accelerometerZ
-                              .toStringAsFixed(
-                                2,
-                              ),
-
-                      color:
-                          Colors.yellow,
-                    ),
-
-                    buildSensorTile(
-                      title:
-                          "Gyroscope X",
-
-                      value:
-                          sensorService
-                              .gyroscopeX
-                              .toStringAsFixed(
-                                2,
-                              ),
-
-                      color:
-                          Colors.green,
-                    ),
-
-                    buildSensorTile(
-                      title:
-                          "Gyroscope Y",
-
-                      value:
-                          sensorService
-                              .gyroscopeY
-                              .toStringAsFixed(
-                                2,
-                              ),
-
-                      color:
-                          Colors.teal,
-                    ),
-
-                    buildSensorTile(
-                      title:
-                          "Motion Intensity",
-
-                      value:
-                          sensorService
-                              .motionIntensity
-                              .toStringAsFixed(
-                                2,
-                              ),
-
-                      color:
-                          Colors.blue,
-                    ),
-                  ],
-                ),
-              ),
+              buildAnalyticsGraph(),
 
               const SizedBox(height: 35),
 
-              Container(
-                width: double.infinity,
-
-                padding:
-                    const EdgeInsets.all(
-                  22,
-                ),
-
-                decoration: BoxDecoration(
-                  color:
-                      const Color(0xFF1C1F2E),
-
-                  borderRadius:
-                      BorderRadius.circular(
-                    24,
-                  ),
-                ),
-
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
-
-                  children: [
-
-                    const Row(
-                      children: [
-
-                        Icon(
-                          Icons.show_chart,
-                          color: Colors.red,
-                        ),
-
-                        SizedBox(width: 12),
-
-                        Text(
-                          "AI Motion Analytics",
-
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight:
-                                FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    SizedBox(
-                      height: 220,
-
-                      child: LineChart(
-
-                        LineChartData(
-
-                          backgroundColor:
-                              Colors.transparent,
-
-                          gridData:
-                              const FlGridData(
-                            show: false,
-                          ),
-
-                          titlesData:
-                              const FlTitlesData(
-                            show: false,
-                          ),
-
-                          borderData:
-                              FlBorderData(
-                            show: false,
-                          ),
-
-                          minX:
-                              motionSpots
-                                      .isEmpty
-                                  ? 0
-                                  : motionSpots
-                                      .first.x,
-
-                          maxX:
-                              motionSpots
-                                      .isEmpty
-                                  ? 25
-                                  : motionSpots
-                                      .last.x,
-
-                          minY: 0,
-
-                          maxY: 60,
-
-                          lineBarsData: [
-
-                            LineChartBarData(
-
-                              spots:
-                                  motionSpots,
-
-                              isCurved: true,
-
-                              color:
-                                  Colors.red,
-
-                              barWidth: 4,
-
-                              dotData:
-                                  const FlDotData(
-                                show: false,
-                              ),
-
-                              belowBarData:
-                                  BarAreaData(
-
-                                show: true,
-
-                                color: Colors.red
-                                    .withValues(
-                                  alpha: 0.2,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
-
-                      children: [
-
-                        buildMiniAnalytics(
-                          title:
-                              "Current",
-
-                          value:
-                              sensorService
-                                  .motionIntensity
-                                  .toStringAsFixed(
-                                    1,
-                                  ),
-
-                          color:
-                              Colors.red,
-                        ),
-
-                        buildMiniAnalytics(
-                          title:
-                              "Status",
-
-                          value:
-                              sensorService
-                                          .motionIntensity >
-                                      30
-                                  ? "HIGH"
-                                  : "NORMAL",
-
-                          color:
-                              sensorService
-                                          .motionIntensity >
-                                      30
-                                  ? Colors.orange
-                                  : Colors.green,
-                        ),
-
-                        buildMiniAnalytics(
-                          title:
-                              "Sensors",
-
-                          value: "LIVE",
-
-                          color:
-                              Colors.blue,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 35),
-
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-
-                child:
-                    ElevatedButton.icon(
-                  style:
-                      ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.blue.shade400,
-
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(
-                        18,
-                      ),
-                    ),
-                  ),
-
-                  onPressed: () {
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const ContactsScreen(),
-                      ),
-                    );
-                  },
-
-                  icon: const Icon(
-                    Icons.contacts,
-                  ),
-
-                  label: const Text(
-                    "Emergency Contacts",
-
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-
-                child:
-                    ElevatedButton.icon(
-                  style:
-                      ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.orange.shade400,
-
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(
-                        18,
-                      ),
-                    ),
-                  ),
-
-                  onPressed: () {
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            HistoryScreen(
-                          incidents:
-                              incidents,
-                        ),
-                      ),
-                    );
-                  },
-
-                  icon: const Icon(
-                    Icons.history,
-                  ),
-
-                  label: const Text(
-                    "Accident History",
-
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 35),
-
-              Container(
-                width: double.infinity,
-
-                padding:
-                    const EdgeInsets.all(
-                  22,
-                ),
-
-                decoration: BoxDecoration(
-                  color:
-                      const Color(0xFF1C1F2E),
-
-                  borderRadius:
-                      BorderRadius.circular(
-                    24,
-                  ),
-                ),
-
+              buildGlassCard(
                 child: Column(
                   crossAxisAlignment:
                       CrossAxisAlignment.start,
@@ -1046,36 +685,40 @@ class _HomeScreenState
 
                       children: [
 
-                        buildStatCard(
-                          title:
+                        buildMiniAnalytics(
+                          title: "Incidents",
+
+                          value:
                               incidents.length
                                   .toString(),
 
-                          subtitle:
-                              "Incidents",
-
-                          color:
-                              Colors.red,
+                          color: Colors.red,
                         ),
 
-                        buildStatCard(
-                          title: "24/7",
+                        buildMiniAnalytics(
+                          title: "Tracking",
 
-                          subtitle:
-                              "Monitoring",
+                          value: "LIVE",
 
-                          color:
-                              Colors.green,
+                          color: Colors.blue,
                         ),
 
-                        buildStatCard(
-                          title: "LIVE",
+                        buildMiniAnalytics(
+                          title: "Status",
 
-                          subtitle:
-                              "Tracking",
+                          value:
+                              sensorService
+                                          .motionIntensity >
+                                      30
+                                  ? "HIGH"
+                                  : "NORMAL",
 
                           color:
-                              Colors.blue,
+                              sensorService
+                                          .motionIntensity >
+                                      30
+                                  ? Colors.orange
+                                  : Colors.green,
                         ),
                       ],
                     ),
@@ -1083,58 +726,131 @@ class _HomeScreenState
                 ),
               ),
 
+              const SizedBox(height: 35),
+
+              buildAnimatedButton(
+                title:
+                    "Emergency Contacts",
+
+                icon:
+                    Icons.contacts,
+
+                color:
+                    Colors.blue.shade400,
+
+                onTap: () {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const ContactsScreen(),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+              buildAnimatedButton(
+                title:
+                    "Accident History",
+
+                icon:
+                    Icons.history,
+
+                color:
+                    Colors.orange.shade400,
+
+                onTap: () {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          HistoryScreen(
+                        incidents:
+                            incidents,
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+buildAnimatedButton(
+  title: "AI Voice Assistant",
+
+  icon: Icons.mic,
+
+  color: Colors.cyan.shade400,
+
+  onTap: () {
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const VoiceAssistantScreen(),
+      ),
+    );
+  },
+),
+
+              const SizedBox(height: 20),
+
+              buildAnimatedButton(
+                title:
+                    "Notification Center",
+
+                icon:
+                    Icons.notifications_active,
+
+                color:
+                    Colors.purple.shade400,
+
+                onTap: () {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const NotificationCenterScreen(),
+                    ),
+                  );
+                },
+              ),
+
               const SizedBox(height: 40),
 
-              SizedBox(
-                width: double.infinity,
-                height: 65,
-
-                child:
-                    ElevatedButton.icon(
-                  style:
-                      ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.red.shade400,
-
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(
-                        18,
-                      ),
-                    ),
-                  ),
-
-                  onPressed: () async {
-
-                    await addIncident();
-
-                    await notificationService
-                        .showEmergencyNotification();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const SOSAlertScreen(),
-                      ),
-                    );
-                  },
-
-                  icon: const Icon(
-                    Icons.warning,
-                  ),
-
-                  label: const Text(
+              buildAnimatedButton(
+                title:
                     "Simulate Accident",
 
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight:
-                          FontWeight.bold,
+                icon:
+                    Icons.warning,
+
+                color:
+                    Colors.red.shade400,
+
+                height: 65,
+
+                onTap: () async {
+
+                  await addIncident();
+
+                  await notificationService
+                      .showEmergencyNotification();
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const SOSAlertScreen(),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
 
               const SizedBox(height: 20),
@@ -1145,136 +861,672 @@ class _HomeScreenState
     );
   }
 
-  Widget buildStatCard({
+  Widget buildAnalyticsGraph() {
 
-    required String title,
-
-    required String subtitle,
-
-    required Color color,
-  }) {
-
-    return Container(
-      width: 90,
-
-      padding:
-          const EdgeInsets.all(16),
-
-      decoration: BoxDecoration(
-        color:
-            color.withValues(
-          alpha: 0.12,
-        ),
-
-        borderRadius:
-            BorderRadius.circular(
-          20,
-        ),
-
-        border: Border.all(
-          color: color,
-        ),
-      ),
+    return buildGlassCard(
 
       child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+
         children: [
 
-          Text(
-            title,
+          Row(
+            mainAxisAlignment:
+                MainAxisAlignment
+                    .spaceBetween,
 
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight:
-                  FontWeight.bold,
-              color: color,
+            children: [
+
+              const Row(
+                children: [
+
+                  Icon(
+                    Icons.show_chart,
+                    color: Colors.red,
+                    size: 30,
+                  ),
+
+                  SizedBox(width: 14),
+
+                  Text(
+                    "AI Motion Analytics",
+
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 10,
+                ),
+
+                decoration: BoxDecoration(
+
+                  color: Colors.red
+                      .withValues(
+                    alpha: 0.12,
+                  ),
+
+                  borderRadius:
+                      BorderRadius.circular(
+                    30,
+                  ),
+
+                  border: Border.all(
+                    color: Colors.red,
+                  ),
+                ),
+
+                child: const Row(
+                  children: [
+
+                    CircleAvatar(
+                      radius: 6,
+                      backgroundColor:
+                          Colors.red,
+                    ),
+
+                    SizedBox(width: 10),
+
+                    Text(
+                      "LIVE",
+
+                      style: TextStyle(
+                        color:
+                            Colors.white,
+
+                        fontWeight:
+                            FontWeight.bold,
+
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 25),
+
+          Container(
+
+            padding:
+                const EdgeInsets.all(
+              14,
+            ),
+
+            decoration: BoxDecoration(
+
+              borderRadius:
+                  BorderRadius.circular(
+                28,
+              ),
+
+              gradient: LinearGradient(
+
+                begin:
+                    Alignment.topLeft,
+
+                end:
+                    Alignment.bottomRight,
+
+                colors: [
+
+                  Colors.red.withValues(
+                    alpha: 0.10,
+                  ),
+
+                  Colors.black,
+                ],
+              ),
+
+              border: Border.all(
+
+                color: Colors.red
+                    .withValues(
+                  alpha: 0.35,
+                ),
+              ),
+
+              boxShadow: [
+
+                BoxShadow(
+
+                  color: Colors.red
+                      .withValues(
+                    alpha: 0.12,
+                  ),
+
+                  blurRadius: 18,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+
+            child: SizedBox(
+
+              height: 240,
+
+              child: LineChart(
+
+                LineChartData(
+
+                  backgroundColor:
+                      Colors.transparent,
+
+                  minX:
+                      motionSpots.isEmpty
+                          ? 0
+                          : motionSpots.first.x,
+
+                  maxX:
+                      motionSpots.isEmpty
+                          ? 25
+                          : motionSpots.last.x,
+
+                  minY: 0,
+                  maxY: 60,
+
+                  gridData: FlGridData(
+
+                    show: true,
+
+                    drawVerticalLine:
+                        true,
+
+                    horizontalInterval:
+                        15,
+
+                    verticalInterval:
+                        5,
+
+                    getDrawingHorizontalLine:
+                        (value) {
+
+                      return FlLine(
+
+                        color: Colors.white
+                            .withValues(
+                          alpha: 0.10,
+                        ),
+
+                        strokeWidth: 1,
+                      );
+                    },
+
+                    getDrawingVerticalLine:
+                        (value) {
+
+                      return FlLine(
+
+                        color: Colors.white
+                            .withValues(
+                          alpha: 0.05,
+                        ),
+
+                        strokeWidth: 1,
+                      );
+                    },
+                  ),
+
+                  titlesData:
+                      FlTitlesData(
+
+                    leftTitles:
+                        AxisTitles(
+
+                      sideTitles:
+                          SideTitles(
+
+                        showTitles:
+                            true,
+
+                        reservedSize:
+                            32,
+
+                        getTitlesWidget:
+                            (
+                          value,
+                          meta,
+                        ) {
+
+                          return Text(
+
+                            value
+                                .toInt()
+                                .toString(),
+
+                            style:
+                                const TextStyle(
+                              color:
+                                  Colors.white54,
+
+                              fontSize:
+                                  11,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    bottomTitles:
+                        AxisTitles(
+
+                      sideTitles:
+                          SideTitles(
+
+                        showTitles:
+                            true,
+
+                        interval: 5,
+
+                        getTitlesWidget:
+                            (
+                          value,
+                          meta,
+                        ) {
+
+                          return Padding(
+
+                            padding:
+                                const EdgeInsets.only(
+                              top: 8,
+                            ),
+
+                            child: Text(
+
+                              "00:${value.toInt()}",
+
+                              style:
+                                  const TextStyle(
+                                color:
+                                    Colors.white54,
+
+                                fontSize:
+                                    10,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    topTitles:
+                        const AxisTitles(
+                      sideTitles:
+                          SideTitles(
+                        showTitles:
+                            false,
+                      ),
+                    ),
+
+                    rightTitles:
+                        const AxisTitles(
+                      sideTitles:
+                          SideTitles(
+                        showTitles:
+                            false,
+                      ),
+                    ),
+                  ),
+
+                  borderData:
+                      FlBorderData(
+
+                    show: true,
+
+                    border: Border.all(
+
+                      color: Colors.red
+                          .withValues(
+                        alpha: 0.15,
+                      ),
+                    ),
+                  ),
+
+                  lineBarsData: [
+
+                    LineChartBarData(
+
+                      spots:
+                          motionSpots,
+
+                      isCurved: true,
+
+                      curveSmoothness:
+                          0.35,
+
+                      color:
+                          Colors.redAccent,
+
+                      barWidth: 4,
+
+                      isStrokeCapRound:
+                          true,
+
+                      dotData:
+                          FlDotData(
+
+                        show: true,
+
+                        getDotPainter:
+                            (
+                          spot,
+                          percent,
+                          barData,
+                          index,
+                        ) {
+
+                          return FlDotCirclePainter(
+
+                            radius: 5,
+
+                            color:
+                                Colors.white,
+
+                            strokeWidth:
+                                3,
+
+                            strokeColor:
+                                Colors.redAccent,
+                          );
+                        },
+                      ),
+
+                      belowBarData:
+                          BarAreaData(
+
+                        show: true,
+
+                        gradient:
+                            LinearGradient(
+
+                          begin:
+                              Alignment.topCenter,
+
+                          end:
+                              Alignment.bottomCenter,
+
+                          colors: [
+
+                            Colors.redAccent
+                                .withValues(
+                              alpha: 0.35,
+                            ),
+
+                            Colors.redAccent
+                                .withValues(
+                              alpha: 0.02,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      shadow: Shadow(
+
+                        color: Colors.red
+                            .withValues(
+                          alpha: 0.7,
+                        ),
+
+                        blurRadius:
+                            14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 22),
 
-          Text(
-            subtitle,
+          Row(
+            mainAxisAlignment:
+                MainAxisAlignment
+                    .spaceBetween,
 
-            textAlign:
-                TextAlign.center,
+            children: [
 
-            style: const TextStyle(
-              color:
-                  Colors.white70,
-            ),
+              buildMiniAnalytics(
+                title: "Current",
+
+                value: sensorService
+                    .motionIntensity
+                    .toStringAsFixed(1),
+
+                color: Colors.red,
+              ),
+
+              buildMiniAnalytics(
+                title: "Status",
+
+                value: sensorService
+                            .motionIntensity >
+                        30
+                    ? "HIGH"
+                    : "NORMAL",
+
+                color: sensorService
+                            .motionIntensity >
+                        30
+                    ? Colors.orange
+                    : Colors.green,
+              ),
+
+              buildMiniAnalytics(
+                title: "Sensors",
+
+                value: "LIVE",
+
+                color: Colors.blue,
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget buildSensorTile({
+  // ─── UPDATED buildGlassCard ───────────────────────────────────────────────
 
-    required String title,
-
-    required String value,
-
-    required Color color,
+  Widget buildGlassCard({
+    required Widget child,
   }) {
 
     return Container(
-      margin:
-          const EdgeInsets.only(
-        bottom: 16,
-      ),
+      width: double.infinity,
 
-      padding:
-          const EdgeInsets.all(
-        18,
-      ),
+      padding: const EdgeInsets.all(22),
 
       decoration: BoxDecoration(
-        color:
-            color.withValues(
-          alpha: 0.12,
+
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+
+          colors: [
+
+            Colors.white.withValues(
+              alpha: 0.08,
+            ),
+
+            const Color(0xFF141824),
+
+            const Color(0xFF0A0D14),
+          ],
         ),
 
         borderRadius:
             BorderRadius.circular(
-          18,
+          28,
         ),
 
         border: Border.all(
-          color: color,
+          color: Colors.white.withValues(
+            alpha: 0.08,
+          ),
         ),
-      ),
 
-      child: Row(
-        mainAxisAlignment:
-            MainAxisAlignment
-                .spaceBetween,
+        boxShadow: [
 
-        children: [
+          BoxShadow(
+            color: Colors.black.withValues(
+              alpha: 0.45,
+            ),
 
-          Text(
-            title,
+            blurRadius: 24,
+            spreadRadius: 2,
 
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight:
-                  FontWeight.bold,
+            offset: const Offset(
+              0,
+              12,
             ),
           ),
 
-          Text(
-            value,
+          BoxShadow(
+            color: Colors.red.withValues(
+              alpha: 0.08,
+            ),
 
-            style: TextStyle(
+            blurRadius: 24,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+
+      child: child,
+    )
+        .animate()
+        .fadeIn(
+          duration: 700.ms,
+        )
+        .slideY(
+          begin: 0.15,
+        )
+        .scale(
+          begin: const Offset(
+            0.98,
+            0.98,
+          ),
+
+          end: const Offset(
+            1,
+            1,
+          ),
+        );
+  }
+
+  // ─── UPDATED buildAnimatedButton ─────────────────────────────────────────
+
+  Widget buildAnimatedButton({
+
+    required String title,
+
+    required IconData icon,
+
+    required Color color,
+
+    required VoidCallback onTap,
+
+    double height = 60,
+  }) {
+
+    return Container(
+
+      decoration: BoxDecoration(
+
+        borderRadius:
+            BorderRadius.circular(
+          22,
+        ),
+
+        boxShadow: [
+
+          BoxShadow(
+            color: color.withValues(
+              alpha: 0.35,
+            ),
+
+            blurRadius: 28,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+
+      child: SizedBox(
+        width: double.infinity,
+        height: height,
+
+        child:
+            ElevatedButton.icon(
+
+          style:
+              ElevatedButton.styleFrom(
+
+            backgroundColor:
+                color.withValues(
+              alpha: 0.92,
+            ),
+
+            elevation: 0,
+
+            shadowColor:
+                Colors.transparent,
+
+            shape:
+                RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(
+                22,
+              ),
+            ),
+          ),
+
+          onPressed: onTap,
+
+          icon: Icon(
+            icon,
+            size: 24,
+          ),
+
+          label: Text(
+            title,
+
+            style: const TextStyle(
               fontSize: 18,
               fontWeight:
                   FontWeight.bold,
-              color: color,
+
+              letterSpacing: 0.4,
             ),
           ),
-        ],
+        ),
       ),
-    );
+    )
+        .animate()
+        .fadeIn(
+          duration: 700.ms,
+        )
+        .slideY(
+          begin: 0.2,
+        )
+        .shimmer(
+          duration: 2200.ms,
+          delay: 1200.ms,
+        );
   }
+
+  // ─── UPDATED buildMiniAnalytics ──────────────────────────────────────────
 
   Widget buildMiniAnalytics({
 
@@ -1286,27 +1538,54 @@ class _HomeScreenState
   }) {
 
     return Container(
-      width: 95,
+      width: 105,
 
       padding:
           const EdgeInsets.all(
-        14,
+        16,
       ),
 
       decoration: BoxDecoration(
-        color:
+
+        gradient: LinearGradient(
+
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+
+          colors: [
+
             color.withValues(
-          alpha: 0.12,
+              alpha: 0.22,
+            ),
+
+            color.withValues(
+              alpha: 0.05,
+            ),
+          ],
         ),
 
         borderRadius:
             BorderRadius.circular(
-          18,
+          24,
         ),
 
         border: Border.all(
-          color: color,
+          color: color.withValues(
+            alpha: 0.8,
+          ),
         ),
+
+        boxShadow: [
+
+          BoxShadow(
+            color: color.withValues(
+              alpha: 0.18,
+            ),
+
+            blurRadius: 18,
+            spreadRadius: 1,
+          ),
+        ],
       ),
 
       child: Column(
@@ -1318,16 +1597,21 @@ class _HomeScreenState
             style: const TextStyle(
               color:
                   Colors.white70,
+
+              fontSize: 14,
             ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
           Text(
             value,
 
+            textAlign:
+                TextAlign.center,
+
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight:
                   FontWeight.bold,
               color: color,
@@ -1335,6 +1619,11 @@ class _HomeScreenState
           ),
         ],
       ),
-    );
+    )
+        .animate()
+        .scale(
+          duration: 500.ms,
+        )
+        .fadeIn();
   }
 }

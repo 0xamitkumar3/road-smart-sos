@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -13,12 +16,23 @@ class EmergencyScreen extends StatefulWidget {
 }
 
 class _EmergencyScreenState
-    extends State<EmergencyScreen> {
+    extends State<EmergencyScreen>
+    with SingleTickerProviderStateMixin {
 
   final GPSService gpsService =
       GPSService();
 
   Position? position;
+
+  late AnimationController
+      radarController;
+
+  late Animation<double>
+      radarAnimation;
+
+  Timer? pulseTimer;
+
+  double pulseSize = 180;
 
   String generateSOSMessage() {
 
@@ -44,6 +58,44 @@ Please contact emergency services immediately.
     super.initState();
 
     loadLocation();
+
+    radarController =
+        AnimationController(
+      vsync: this,
+      duration:
+          const Duration(
+        seconds: 4,
+      ),
+    );
+
+    radarAnimation =
+        Tween<double>(
+      begin: 0,
+      end: 2 * pi,
+    ).animate(radarController);
+
+    radarController.repeat();
+
+    pulseTimer = Timer.periodic(
+
+      const Duration(
+        milliseconds: 900,
+      ),
+
+      (_) {
+
+        if (mounted) {
+
+          setState(() {
+
+            pulseSize =
+                pulseSize == 180
+                    ? 240
+                    : 180;
+          });
+        }
+      },
+    );
   }
 
   Future<void> loadLocation() async {
@@ -57,14 +109,26 @@ Please contact emergency services immediately.
   }
 
   @override
+  void dispose() {
+
+    radarController.dispose();
+
+    pulseTimer?.cancel();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F111A),
+      backgroundColor:
+          const Color(0xFF0F111A),
 
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding:
+              const EdgeInsets.all(24),
 
           child: SingleChildScrollView(
             child: Column(
@@ -73,22 +137,193 @@ Please contact emergency services immediately.
 
               children: [
 
-                Icon(
-                  Icons.warning_amber_rounded,
-                  size: 130,
-                  color: Colors.red.shade400,
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: 300,
+                  height: 300,
+
+                  child: Stack(
+                    alignment:
+                        Alignment.center,
+
+                    children: [
+
+                      AnimatedContainer(
+                        duration:
+                            const Duration(
+                          milliseconds: 900,
+                        ),
+
+                        width: pulseSize,
+                        height: pulseSize,
+
+                        decoration:
+                            BoxDecoration(
+                          shape:
+                              BoxShape.circle,
+
+                          color: Colors.red
+                              .withValues(
+                            alpha: 0.08,
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                        width: 260,
+                        height: 260,
+
+                        decoration:
+                            BoxDecoration(
+                          shape:
+                              BoxShape.circle,
+
+                          border: Border.all(
+                            color:
+                                Colors.red,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                        width: 200,
+                        height: 200,
+
+                        decoration:
+                            BoxDecoration(
+                          shape:
+                              BoxShape.circle,
+
+                          border: Border.all(
+                            color: Colors.red
+                                .withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                        width: 140,
+                        height: 140,
+
+                        decoration:
+                            BoxDecoration(
+                          shape:
+                              BoxShape.circle,
+
+                          border: Border.all(
+                            color: Colors.red
+                                .withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      AnimatedBuilder(
+                        animation:
+                            radarAnimation,
+
+                        builder:
+                            (_, child) {
+
+                          return Transform.rotate(
+
+                            angle:
+                                radarAnimation
+                                    .value,
+
+                            child: child,
+                          );
+                        },
+
+                        child: Container(
+                          width: 260,
+                          height: 260,
+
+                          decoration:
+                              BoxDecoration(
+                            shape:
+                                BoxShape.circle,
+
+                            gradient:
+                                SweepGradient(
+                              colors: [
+
+                                Colors.transparent,
+
+                                Colors.red
+                                    .withValues(
+                                  alpha: 0.8,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                        width: 80,
+                        height: 80,
+
+                        decoration:
+                            BoxDecoration(
+                          shape:
+                              BoxShape.circle,
+
+                          color:
+                              Colors.red,
+
+                          boxShadow: [
+
+                            BoxShadow(
+                              color: Colors.red
+                                  .withValues(
+                                alpha: 0.8,
+                              ),
+
+                              blurRadius: 40,
+                              spreadRadius: 10,
+                            ),
+                          ],
+                        ),
+
+                        child: const Icon(
+                          Icons.warning,
+                          color: Colors.white,
+                          size: 42,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 35),
 
-                const Text(
-                  "SOS SENT",
+                ShaderMask(
+                  shaderCallback: (bounds) {
 
-                  style: TextStyle(
-                    fontSize: 42,
-                    fontWeight:
-                        FontWeight.bold,
-                    letterSpacing: 2,
+                    return LinearGradient(
+                      colors: [
+                        Colors.red.shade300,
+                        Colors.red.shade700,
+                      ],
+                    ).createShader(bounds);
+                  },
+
+                  child: const Text(
+                    "SOS SENT",
+
+                    style: TextStyle(
+                      fontSize: 42,
+                      fontWeight:
+                          FontWeight.bold,
+                      letterSpacing: 3,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
 
@@ -97,7 +332,8 @@ Please contact emergency services immediately.
                 const Text(
                   "Emergency contacts,\nnearby hospitals and police\nhave been notified.",
 
-                  textAlign: TextAlign.center,
+                  textAlign:
+                      TextAlign.center,
 
                   style: TextStyle(
                     fontSize: 18,
@@ -117,7 +353,9 @@ Please contact emergency services immediately.
                   ),
 
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+
+                    gradient:
+                        LinearGradient(
                       colors: [
                         Colors.red.shade400,
                         Colors.red.shade700,
@@ -126,8 +364,21 @@ Please contact emergency services immediately.
 
                     borderRadius:
                         BorderRadius.circular(
-                      24,
+                      28,
                     ),
+
+                    boxShadow: [
+
+                      BoxShadow(
+                        color: Colors.red
+                            .withValues(
+                          alpha: 0.4,
+                        ),
+
+                        blurRadius: 25,
+                        spreadRadius: 3,
+                      ),
+                    ],
                   ),
 
                   child: const Column(
@@ -178,9 +429,7 @@ Please contact emergency services immediately.
 
                               SizedBox(height: 8),
 
-                              Text(
-                                "Sensors",
-                              ),
+                              Text("Sensors"),
 
                               SizedBox(height: 4),
 
@@ -205,9 +454,7 @@ Please contact emergency services immediately.
 
                               SizedBox(height: 8),
 
-                              Text(
-                                "GPS",
-                              ),
+                              Text("GPS"),
 
                               SizedBox(height: 4),
 
@@ -232,9 +479,7 @@ Please contact emergency services immediately.
 
                               SizedBox(height: 8),
 
-                              Text(
-                                "Rescue",
-                              ),
+                              Text("Rescue"),
 
                               SizedBox(height: 4),
 
@@ -319,6 +564,13 @@ Please contact emergency services immediately.
                     borderRadius:
                         BorderRadius.circular(
                       24,
+                    ),
+
+                    border: Border.all(
+                      color: Colors.red
+                          .withValues(
+                        alpha: 0.2,
+                      ),
                     ),
                   ),
 
@@ -546,6 +798,8 @@ Please contact emergency services immediately.
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 30),
               ],
             ),
           ),
