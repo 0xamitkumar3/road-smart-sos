@@ -6,6 +6,8 @@ import '../../services/auth_service.dart';
 import '../auth/login_screen.dart';
 import '../medical/medical_info_screen.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class ProfileScreen extends StatelessWidget {
 
   const ProfileScreen({
@@ -14,6 +16,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final user =
+    FirebaseAuth.instance.currentUser;
+    final userEmail =
+    user?.email ?? "No Email";
+    final userName =
+    userEmail.split('@').first;
 
     return Scaffold(
       backgroundColor:
@@ -110,9 +119,9 @@ class ProfileScreen extends StatelessWidget {
                 height: 24,
               ),
 
-              const Text(
+              Text(
 
-                "Amit Kumar",
+                userName,
 
                 style: TextStyle(
                   fontSize: 30,
@@ -133,7 +142,7 @@ class ProfileScreen extends StatelessWidget {
 
               Text(
 
-                "imamit0311@gmail.com",
+                userEmail,
 
                 style: TextStyle(
                   color:

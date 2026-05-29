@@ -1100,79 +1100,66 @@ Widget buildAnalyticsGraph() {
       children: [
 
         Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
-
           children: [
 
-            const Row(
-              children: [
+            Expanded(
+              child: Row(
+                children: [
 
-                Icon(
-                  Icons.show_chart,
-                  color: Colors.red,
-                  size: 30,
-                ),
-
-                SizedBox(width: 14),
-
-                Text(
-                  "AI Motion Analytics",
-
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                  const Icon(
+                    Icons.show_chart,
+                    color: Colors.red,
+                    size: 30,
                   ),
-                ),
-              ],
+
+                  const SizedBox(width: 14),
+
+                  Expanded(
+                    child: Text(
+                      "AI Motion Analytics",
+                      overflow: TextOverflow.ellipsis,
+
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
+            const SizedBox(width: 8),
+
             Container(
-              padding:
-                  const EdgeInsets.symmetric(
-                horizontal: 18,
-                vertical: 10,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
               ),
 
               decoration: BoxDecoration(
-
-                color: Colors.red
-                    .withValues(
-                  alpha: 0.12,
-                ),
-
-                borderRadius:
-                    BorderRadius.circular(
-                  30,
-                ),
-
-                border: Border.all(
-                  color: Colors.red,
-                ),
+                color: Colors.red.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.red),
               ),
 
               child: const Row(
-                mainAxisSize:
-                    MainAxisSize.min,
-
+                mainAxisSize: MainAxisSize.min,
                 children: [
 
                   CircleAvatar(
-                    radius: 6,
-                    backgroundColor:
-                        Colors.red,
+                    radius: 5,
+                    backgroundColor: Colors.red,
                   ),
 
-                  SizedBox(width: 10),
+                  SizedBox(width: 6),
 
                   Text(
                     "LIVE",
-
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight:
-                          FontWeight.bold,
-                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
                     ),
                   ),
                 ],

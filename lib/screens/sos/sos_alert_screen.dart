@@ -232,13 +232,13 @@ Please respond immediately.
       backgroundColor:
           const Color(0xFF0F111A),
 
-      body: Center(
-        child: Padding(
-
-          padding:
-              const EdgeInsets.all(
-            24,
-          ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+          child: Center(
+          child: Padding(
+          padding: const EdgeInsets.all(
+          24,
+        ),
 
           child: Column(
             mainAxisAlignment:
@@ -337,7 +337,7 @@ Please respond immediately.
               ),
 
               const SizedBox(
-                height: 55,
+                height: 35,
               ),
 
               CircularPercentIndicator(
@@ -448,11 +448,13 @@ Please respond immediately.
                   color:
                       Colors.white54,
                 ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }

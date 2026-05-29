@@ -7,7 +7,7 @@ class AIService {
     model: 'gemini-2.0-flash',
 
     apiKey:
-        'AIzaSyAu5kx-pmmAUxZpU5d3_lqB1thhHRMDJSQ',
+        'my-api-key',
   );
 
   Future<String> getEmergencyResponse(
