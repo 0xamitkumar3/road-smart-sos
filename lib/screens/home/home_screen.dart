@@ -14,19 +14,18 @@ import '../../services/notification_service/notification_service.dart';
 
 
 import '../emergency_contacts/contact_screen.dart';
-import '../history/history_screen.dart';
+import '../history/sos_history_screen.dart';
 import '../notifications/notification_center_screen.dart';
 import '../profile/profile_screen.dart';
 import '../settings/settings_screen.dart';
 import '../sos/sos_alert_screen.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
 
   @override
-  State<HomeScreen> createState() =>
+  State<HomeScreen> createState() => 
       _HomeScreenState();
 }
 
@@ -954,15 +953,12 @@ class _HomeScreenState
 
 
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          HistoryScreen(
-                        incidents:
-                            incidents,
-                      ),
-                    ),
-                  );
+  context,
+  MaterialPageRoute(
+    builder: (_) =>
+        const SOSHistoryScreen(),
+  ),
+);
                 },
               ),
 
@@ -991,6 +987,26 @@ class _HomeScreenState
                   ),
                 );
               },
+              ),
+
+              const SizedBox(height: 20),
+
+              buildAnimatedButton(
+                title: "SOS Alert History",
+
+                icon: Icons.sos,
+
+                color: Colors.red.shade700,
+
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          const SOSHistoryScreen(),
+                    ),
+                  );
+                },
               ),
 
 

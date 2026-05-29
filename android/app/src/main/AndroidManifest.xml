@@ -1,7 +1,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- INTERNET -->
+    <uses-permission
+        android:name=
+            "android.permission.INTERNET"/>
+
+    <!-- LOCATION PERMISSIONS -->
+    <uses-permission
+        android:name=
+            "android.permission.ACCESS_FINE_LOCATION"/>
+    <!--Record_Audio  -->
+    <uses-permission
+    android:name="android.permission.RECORD_AUDIO"/>
+
+    <uses-permission
+        android:name=
+            "android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- SMS PERMISSIONS -->
+    <uses-permission
+        android:name=
+            "android.permission.SEND_SMS"/>
+
+    <uses-permission
+        android:name=
+            "android.permission.READ_SMS"/>
+
+    <uses-permission
+        android:name=
+            "android.permission.RECEIVE_SMS"/>
 
     <application
         android:label="road_smart_sos"
@@ -26,7 +54,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category
+                    android:name=
+                        "android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -40,9 +70,13 @@
     <!-- Text processing support -->
     <queries>
         <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <action
+                android:name=
+                    "android.intent.action.PROCESS_TEXT"/>
 
-            <data android:mimeType="text/plain"/>
+            <data
+                android:mimeType=
+                    "text/plain"/>
         </intent>
     </queries>
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "103188549651",
+    "project_id": "road-smart-sos",
+    "storage_bucket": "road-smart-sos.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103188549651:android:de4cae0cc053ea92282fe6",
+        "android_client_info": {
+          "package_name": "com.example.road_smart_sos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7IyJ4Q-Ypx5k-JzIq789gKhtT2ImgJ-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -45,13 +45,13 @@ class LiveTrackingScreen extends StatelessWidget {
 
               children: [
 
-                TileLayer(
-                  urlTemplate:
-                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            TileLayer(
+  urlTemplate:
+      'https://tile.openstreetmap.de/{z}/{x}/{y}.png',
 
-                  userAgentPackageName:
-                  'com.example.road_smart_sos',
-                ),
+  userAgentPackageName:
+      'com.roadsmartsos.app',
+),
 
                 MarkerLayer(
                   markers: [

@@ -4,14 +4,32 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
 
+import '../../services/auth_service.dart';
+
 import '../home/home_screen.dart';
 import 'signup_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
 
   const LoginScreen({
     super.key,
   });
+
+  @override
+  State<LoginScreen> createState() =>
+      _LoginScreenState();
+}
+
+class _LoginScreenState
+    extends State<LoginScreen> {
+
+  final TextEditingController
+      emailController =
+          TextEditingController();
+
+  final TextEditingController
+      passwordController =
+          TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +80,9 @@ class LoginScreen extends StatelessWidget {
                         colors: [
 
                           Colors.red
-                              .withValues(alpha: 0.25),
+                              .withValues(
+                            alpha: 0.25,
+                          ),
 
                           Colors.transparent,
                         ],
@@ -146,7 +166,7 @@ class LoginScreen extends StatelessWidget {
                         children: [
 
                           Icon(
-                            Icons.phone,
+                            Icons.login,
                             color:
                                 Colors.red,
                           ),
@@ -156,7 +176,7 @@ class LoginScreen extends StatelessWidget {
                           ),
 
                           Text(
-                            "Phone Login",
+                            "User Login",
 
                             style: TextStyle(
                               fontSize: 20,
@@ -171,19 +191,22 @@ class LoginScreen extends StatelessWidget {
                         height: 28,
                       ),
 
-                      const CustomTextField(
+                      CustomTextField(
                         hint:
-                            "Phone Number",
+                            "Email",
 
                         icon:
-                            Icons.phone_android,
+                            Icons.email,
+
+                        controller:
+                            emailController,
                       ),
 
                       const SizedBox(
                         height: 22,
                       ),
 
-                      const CustomTextField(
+                      CustomTextField(
                         hint:
                             "Password",
 
@@ -191,6 +214,9 @@ class LoginScreen extends StatelessWidget {
                             Icons.lock,
 
                         obscure: true,
+
+                        controller:
+                            passwordController,
                       ),
 
                       const SizedBox(
@@ -201,16 +227,53 @@ class LoginScreen extends StatelessWidget {
                         text:
                             "Login",
 
-                        onTap: () {
+                        onTap: () async {
 
-                          Navigator.pushReplacement(
-                            context,
+                          final user =
+                              await AuthService().login(
 
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  const HomeScreen(),
-                            ),
+                            email:
+                                emailController.text.trim(),
+
+                            password:
+                                passwordController.text.trim(),
                           );
+
+                          if (user != null) {
+
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+
+                              const SnackBar(
+                                content: Text(
+                                  "Login Successful",
+                                ),
+                              ),
+                            );
+
+                            Navigator.pushReplacement(
+                              context,
+
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const HomeScreen(),
+                              ),
+                            );
+
+                          } else {
+
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+
+                              const SnackBar(
+                                content: Text(
+                                  "Invalid Email or Password",
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
 
@@ -409,7 +472,9 @@ class LoginScreen extends StatelessWidget {
 
           colors: [
 
-            Colors.white.withValues(alpha: 0.06),
+            Colors.white.withValues(
+              alpha: 0.06,
+            ),
 
             const Color(
               0xFF141824,
@@ -424,14 +489,18 @@ class LoginScreen extends StatelessWidget {
 
         border: Border.all(
           color: Colors.white
-              .withValues(alpha: 0.08),
+              .withValues(
+            alpha: 0.08,
+          ),
         ),
 
         boxShadow: [
 
           BoxShadow(
             color: Colors.red
-                .withValues(alpha: 0.08),
+                .withValues(
+              alpha: 0.08,
+            ),
 
             blurRadius: 24,
             spreadRadius: 1,
@@ -462,7 +531,9 @@ class LoginScreen extends StatelessWidget {
 
         color:
             Colors.white
-                .withValues(alpha: 0.05),
+                .withValues(
+          alpha: 0.05,
+        ),
 
         borderRadius:
             BorderRadius.circular(
@@ -471,7 +542,9 @@ class LoginScreen extends StatelessWidget {
 
         border: Border.all(
           color: Colors.white
-              .withValues(alpha: 0.08),
+              .withValues(
+            alpha: 0.08,
+          ),
         ),
       ),
 

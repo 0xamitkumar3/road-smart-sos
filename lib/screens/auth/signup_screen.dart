@@ -4,6 +4,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
 
+import '../../services/auth_service.dart';
+import '../../services/firestore_service.dart';
+
 import '../home/home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -23,11 +26,27 @@ class _SignupScreenState
   bool otpSent = false;
 
   final TextEditingController
+      nameController =
+          TextEditingController();
+
+  final TextEditingController
       phoneController =
           TextEditingController();
 
   final TextEditingController
       otpController =
+          TextEditingController();
+
+  final TextEditingController
+      emailController =
+          TextEditingController();
+
+  final TextEditingController
+      passwordController =
+          TextEditingController();
+
+  final TextEditingController
+      bloodGroupController =
           TextEditingController();
 
   @override
@@ -189,12 +208,15 @@ class _SignupScreenState
                         height: 28,
                       ),
 
-                      const CustomTextField(
+                      CustomTextField(
                         hint:
                             "Full Name",
 
                         icon:
                             Icons.person,
+
+                        controller:
+                            nameController,
                       ),
 
                       const SizedBox(
@@ -332,19 +354,22 @@ class _SignupScreenState
                         height: 12,
                       ),
 
-                      const CustomTextField(
+                      CustomTextField(
                         hint:
                             "Email",
 
                         icon:
                             Icons.email,
+
+                        controller:
+                            emailController,
                       ),
 
                       const SizedBox(
                         height: 22,
                       ),
 
-                      const CustomTextField(
+                      CustomTextField(
                         hint:
                             "Password",
 
@@ -352,18 +377,24 @@ class _SignupScreenState
                             Icons.lock,
 
                         obscure: true,
+
+                        controller:
+                            passwordController,
                       ),
 
                       const SizedBox(
                         height: 22,
                       ),
 
-                      const CustomTextField(
+                      CustomTextField(
                         hint:
                             "Blood Group",
 
                         icon:
                             Icons.bloodtype,
+
+                        controller:
+                            bloodGroupController,
                       ),
 
                       const SizedBox(
@@ -374,7 +405,7 @@ class _SignupScreenState
                         text:
                             "Create Account",
 
-                        onTap: () {
+                        onTap: () async {
 
                           if (!otpSent) {
 
@@ -392,14 +423,66 @@ class _SignupScreenState
                             return;
                           }
 
-                          Navigator.pushReplacement(
-                            context,
+                          final user =
+                              await AuthService().signUp(
 
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  const HomeScreen(),
-                            ),
+                            email:
+                                emailController.text.trim(),
+
+                            password:
+                                passwordController.text.trim(),
                           );
+
+                          if (user != null) {
+
+                            await FirestoreService()
+                                .saveUserData(
+
+                              uid: user.uid,
+
+                              name:
+                                  nameController.text.trim(),
+
+                              email:
+                                  emailController.text.trim(),
+
+                              bloodGroup:
+                                  bloodGroupController.text.trim(),
+                            );
+
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+
+                              const SnackBar(
+                                content: Text(
+                                  "Account Created Successfully",
+                                ),
+                              ),
+                            );
+
+                            Navigator.pushReplacement(
+                              context,
+
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const HomeScreen(),
+                              ),
+                            );
+
+                          } else {
+
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+
+                              const SnackBar(
+                                content: Text(
+                                  "Signup Failed",
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ],
@@ -436,10 +519,11 @@ class _SignupScreenState
                         height: 14,
                       ),
 
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment
-                                .center,
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        alignment:
+                            WrapAlignment.center,
 
                         children: [
 
@@ -451,20 +535,12 @@ class _SignupScreenState
                                 "Secure",
                           ),
 
-                          const SizedBox(
-                            width: 14,
-                          ),
-
                           buildMiniFeature(
                             icon:
                                 Icons.gps_fixed,
 
                             title:
                                 "Tracking",
-                          ),
-
-                          const SizedBox(
-                            width: 14,
                           ),
 
                           buildMiniFeature(
@@ -588,6 +664,9 @@ class _SignupScreenState
       ),
 
       child: Row(
+        mainAxisSize:
+            MainAxisSize.min,
+
         children: [
 
           Icon(
