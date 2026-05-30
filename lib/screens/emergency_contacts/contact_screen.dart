@@ -462,14 +462,38 @@ class _ContactsScreenState
 
                                     IconButton(
 
-                                      onPressed: () {
+                                      onPressed: () async {
 
-                                        setState(() {
+                                        final user =
+                                            FirebaseAuth
+                                                .instance
+                                                .currentUser;
 
-                                          contacts.removeAt(
-                                            index,
-                                          );
-                                        });
+                                        if (user == null) return;
+
+                                        await ContactService()
+                                            .deleteEmergencyContact(
+
+                                          uid: user.uid,
+
+                                          contactId:
+                                              contact["id"],
+                                        );
+
+                                        await loadContacts();
+
+                                        if (!mounted) return;
+
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+
+                                          const SnackBar(
+                                            content: Text(
+                                              "Contact Deleted",
+                                            ),
+                                          ),
+                                        );
                                       },
 
                                       icon: const Icon(

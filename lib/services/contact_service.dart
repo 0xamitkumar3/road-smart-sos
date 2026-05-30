@@ -55,6 +55,21 @@ class ContactService {
     }).toList();
   }
 
+  Future<void> deleteEmergencyContact({
+    required String uid,
+    required String contactId,
+    }) async {
+
+    await _firestore
+        .collection("users")
+        .doc(uid)
+        .collection(
+          "emergency_contacts",
+        )
+        .doc(contactId)
+        .delete();
+  }
+
   Future<List<String>>
       getEmergencyNumbers(
     String uid,

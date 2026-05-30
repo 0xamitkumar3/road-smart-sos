@@ -156,8 +156,82 @@ class SOSHistoryScreen extends StatelessWidget {
           final alerts =
               snapshot.data!.docs;
 
+          final now = DateTime.now();
+
+          int todayAlerts = 0;
+          int weekAlerts = 0;
+
+          DateTime? latestAlert;
+
+          for (var doc in alerts) {
+            final data =
+                doc.data() as Map<String, dynamic>;
+
+            final timestamp =
+                data["createdAt"];
+
+            if (timestamp is Timestamp) {
+              final dt = timestamp.toDate();
+
+              latestAlert ??= dt;
+
+              if (dt.year == now.year &&
+                  dt.month == now.month &&
+                  dt.day == now.day) {
+                todayAlerts++;
+              }
+
+              if (now.difference(dt).inDays < 7) {
+                weekAlerts++;
+              }
+            }
+          }
+
           return Column(
             children: [
+              Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: buildAnalyticsCard(
+                          "Today",
+                          todayAlerts.toString(),
+                          Colors.orange,
+                          Icons.today,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: buildAnalyticsCard(
+                          "This Week",
+                          weekAlerts.toString(),
+                          Colors.blue,
+                          Icons.bar_chart,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: buildAnalyticsCard(
+                    "Latest Alert",
+                    latestAlert == null
+                        ? "-"
+                        : "${latestAlert.day}/${latestAlert.month} ${latestAlert.hour}:${latestAlert.minute}",
+                    Colors.green,
+                    Icons.access_time,
+                  ),
+                ),
+
+            const SizedBox(height: 10),
               Container(
                 margin:
                     const EdgeInsets.all(
@@ -463,6 +537,60 @@ class SOSHistoryScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+  Widget buildAnalyticsCard(
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+
+      decoration: BoxDecoration(
+        color: color.withValues(
+          alpha: 0.12,
+        ),
+
+        borderRadius:
+            BorderRadius.circular(20),
+
+        border: Border.all(
+          color: color,
+        ),
+      ),
+
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 28,
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white70,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 22,
+              fontWeight:
+                  FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
